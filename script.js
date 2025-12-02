@@ -207,18 +207,69 @@ if (localStorage.getItem('aiUsageCount')) {
 }
 
 // Text Rewriting Function
-async function rewriteText(style) {
-    const inputText = document.getElementById('inputText').value;
-    if (!inputText.trim()) {
-        alert("Please enter some text to rewrite!");
+async function rewriteTextWithAI(text, style) {
+    // Check if user is premium
+    const user = auth.currentUser;
+    if (!user) {
+        alert('Please login first!');
+        showAuthModal();
         return;
     }
-
-    const outputTextarea = document.getElementById('outputText');
-    outputTextarea.value = "AI is rewriting your text... ⏳";
     
-    const result = await aiClient.rewriteText(inputText, style);
-    outputTextarea.value = result;
+    // Get user data
+    const userDoc = await db.collection('users').doc(user.uid).get();
+    const userData = userDoc.data();
+    
+    // Check free uses
+    if (!userData.isPremium && userData.freeUses <= 0) {
+        alert('Free uses exhausted! Please upgrade to premium.');
+        showPremium();
+        return;
+    }
+    
+    // Prepare API call
+    const prompts = {
+        professional: "Rewrite this text in a professional business tone: ",
+        concise: "Make this text more concise and to the point: ",
+        friendly: "Rewrite this in a friendly, casual tone: "
+    };
+    
+    try {
+        // Call OpenAI API (via proxy for security)
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer YOUR_OPENAI_API_KEY'
+            },
+            body: JSON.stringify({
+                model: "gpt-3.5-turbo",
+                messages: [
+                    {
+                        role: "user",
+                        content: prompts[style] + text
+                    }
+                ],
+                max_tokens: 500,
+                temperature: 0.7
+            })
+        });
+        
+        const data = await response.json();
+        
+        // Decrement free uses if not premium
+        if (!userData.isPremium) {
+            await db.collection('users').doc(user.uid).update({
+                freeUses: userData.freeUses - 1
+            });
+        }
+        
+        return data.choices[0].message.content;
+        
+    } catch (error) {
+        console.error('AI Error:', error);
+        return "AI service is currently unavailable. Please try again later.";
+    }
 }
 
 // Copy to Clipboard
