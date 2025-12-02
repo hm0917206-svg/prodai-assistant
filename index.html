@@ -18,6 +18,36 @@
 </head>
     <script src="firebase-config.js"></script>
 <body>
+    <!-- Auth Modal -->
+<div id="authModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; justify-content:center; align-items:center;">
+    <div style="background:white; padding:30px; border-radius:10px; width:350px;">
+        <h2 style="margin-bottom:20px;">Welcome to ProdAI</h2>
+        
+        <div id="loginForm">
+            <input type="email" id="loginEmail" placeholder="Email" style="width:100%; padding:10px; margin-bottom:10px;">
+            <input type="password" id="loginPassword" placeholder="Password" style="width:100%; padding:10px; margin-bottom:10px;">
+            <button onclick="login()" style="width:100%; padding:10px; background:#667eea; color:white; border:none; border-radius:5px; margin-bottom:10px;">Login</button>
+            <button onclick="showSignup()" style="width:100%; padding:10px; background:#f0f0f0; border:none; border-radius:5px;">Create Account</button>
+        </div>
+        
+        <div id="signupForm" style="display:none;">
+            <input type="text" id="signupName" placeholder="Your Name" style="width:100%; padding:10px; margin-bottom:10px;">
+            <input type="email" id="signupEmail" placeholder="Email" style="width:100%; padding:10px; margin-bottom:10px;">
+            <input type="password" id="signupPassword" placeholder="Password (min 6 chars)" style="width:100%; padding:10px; margin-bottom:10px;">
+            <button onclick="signup()" style="width:100%; padding:10px; background:#4CAF50; color:white; border:none; border-radius:5px; margin-bottom:10px;">Sign Up</button>
+            <button onclick="showLogin()" style="width:100%; padding:10px; background:#f0f0f0; border:none; border-radius:5px;">Back to Login</button>
+        </div>
+        
+        <button onclick="hideAuthModal()" style="margin-top:20px; width:100%; padding:10px; background:#ccc; border:none; border-radius:5px;">Close</button>
+    </div>
+</div>
+
+<!-- User Status Bar -->
+<div id="userStatus" style="text-align:right; padding:10px; background:#f8f9fa;">
+    <span id="userEmail">Not logged in</span>
+    <button onclick="showAuthModal()" style="margin-left:10px; padding:5px 15px; background:#667eea; color:white; border:none; border-radius:5px;">Login</button>
+    <button onclick="logout()" id="logoutBtn" style="display:none; margin-left:10px; padding:5px 15px; background:#e53935; color:white; border:none; border-radius:5px;">Logout</button>
+</div>
     <div class="container">
         <!-- Header -->
         <header>
