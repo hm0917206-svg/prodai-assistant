@@ -1,3 +1,85 @@
+// Auth Functions
+function showAuthModal() {
+    document.getElementById('authModal').style.display = 'flex';
+}
+
+function hideAuthModal() {
+    document.getElementById('authModal').style.display = 'none';
+}
+
+function showSignup() {
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('signupForm').style.display = 'block';
+}
+
+function showLogin() {
+    document.getElementById('signupForm').style.display = 'none';
+    document.getElementById('loginForm').style.display = 'block';
+}
+
+async function signup() {
+    const name = document.getElementById('signupName').value;
+    const email = document.getElementById('signupEmail').value;
+    const password = document.getElementById('signupPassword').value;
+    
+    try {
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        await db.collection('users').doc(userCredential.user.uid).set({
+            name: name,
+            email: email,
+            isPremium: false,
+            freeUses: 10,
+            createdAt: new Date()
+        });
+        hideAuthModal();
+        updateUserStatus(email);
+    } catch (error) {
+        alert('Error: ' + error.message);
+    }
+}
+
+async function login() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    
+    try {
+        await auth.signInWithEmailAndPassword(email, password);
+        hideAuthModal();
+        updateUserStatus(email);
+    } catch (error) {
+        alert('Error: ' + error.message);
+    }
+}
+
+async function logout() {
+    await auth.signOut();
+    updateUserStatus(null);
+}
+
+function updateUserStatus(email) {
+    const userEmailSpan = document.getElementById('userEmail');
+    const loginBtn = document.querySelector('#userStatus button[onclick="showAuthModal()"]');
+    const logoutBtn = document.getElementById('logoutBtn');
+    
+    if (email) {
+        userEmailSpan.textContent = 'Logged in as: ' + email;
+        loginBtn.style.display = 'none';
+        logoutBtn.style.display = 'inline-block';
+    } else {
+        userEmailSpan.textContent = 'Not logged in';
+        loginBtn.style.display = 'inline-block';
+        logoutBtn.style.display = 'none';
+    }
+}
+
+// Check auth state on load
+auth.onAuthStateChanged((user) => {
+    if (user) {
+        updateUserStatus(user.email);
+    } else {
+        updateUserStatus(null);
+    }
+});
 // Tab Switching
 document.querySelectorAll('.tab-btn').forEach(button => {
     button.addEventListener('click', () => {
