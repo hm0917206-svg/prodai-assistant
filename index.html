@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProdAI - AI Productivity Assistant</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <!-- Free Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1><i class="fas fa-robot"></i> ProdAI Assistant</h1>
+            <p class="tagline">Your free AI-powered productivity companion</p>
+        </header>
+
+        <!-- Main Features Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="rewriter">✍️ AI Rewriter</button>
+            <button class="tab-btn" data-tab="tasks">📝 Smart Tasks</button>
+            <button class="tab-btn" data-tab="planner">📅 Daily Planner</button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content active" id="rewriter">
+            <h2><i class="fas fa-magic"></i> AI Text Rewriter</h2>
+            <div class="input-group">
+                <textarea id="inputText" placeholder="Paste your text here... 
+Example: 'I need to write a professional email to my boss about working from home.'"></textarea>
+                <div class="actions">
+                    <button onclick="rewriteText('professional')" class="action-btn">
+                        <i class="fas fa-suitcase"></i> Make Professional
+                    </button>
+                    <button onclick="rewriteText('concise')" class="action-btn">
+                        <i class="fas fa-compress"></i> Make Concise
+                    </button>
+                    <button onclick="rewriteText('friendly')" class="action-btn">
+                        <i class="fas fa-smile"></i> Make Friendly
+                    </button>
+                </div>
+                <textarea id="outputText" placeholder="AI rewritten text will appear here..." readonly></textarea>
+                <button onclick="copyToClipboard()" class="copy-btn">
+                    <i class="fas fa-copy"></i> Copy Result
+                </button>
+            </div>
+        </div>
+
+        <div class="tab-content" id="tasks">
+            <h2><i class="fas fa-tasks"></i> Smart Task Manager</h2>
+            <div class="task-input">
+                <input type="text" id="taskInput" placeholder="Add a task (e.g., 'Prepare presentation')">
+                <button onclick="addTask()" class="add-btn">
+                    <i class="fas fa-plus"></i> Add
+                </button>
+            </div>
+            <div class="ai-suggestions">
+                <h3><i class="fas fa-lightbulb"></i> AI Suggestions</h3>
+                <button onclick="generateTaskSuggestions()" class="suggest-btn">
+                    Get AI Task Suggestions
+                </button>
+                <div id="suggestionsList" class="suggestions-list">
+                    <!-- AI suggestions will appear here -->
+                </div>
+            </div>
+            <ul id="taskList" class="task-list">
+                <!-- Tasks will be added here -->
+            </ul>
+        </div>
+
+        <div class="tab-content" id="planner">
+            <h2><i class="fas fa-calendar-alt"></i> Daily Planner</h2>
+            <div class="planner-input">
+                <label for="focusArea">Main Focus Today:</label>
+                <input type="text" id="focusArea" placeholder="e.g., Complete project proposal">
+                <button onclick="generatePlanner()" class="planner-btn">
+                    <i class="fas fa-calendar-plus"></i> Generate AI Planner
+                </button>
+            </div>
+            <div id="plannerOutput" class="planner-output">
+                <!-- AI-generated planner will appear here -->
+            </div>
+        </div>
+
+        <!-- Monetization Notice (Transparent) -->
+        <div class="monetization">
+            <h3><i class="fas fa-coins"></i> How This App Makes Money</h3>
+            <p>Free tier: 10 AI uses/day • <a href="#" onclick="showPremium()">Premium: $3/month for unlimited</a></p>
+            <div id="premiumInfo" style="display:none; background:#f8f9fa; padding:15px; border-radius:8px; margin-top:10px;">
+                <p><strong>Premium Features:</strong></p>
+                <ul>
+                    <li>Unlimited AI rewrites</li>
+                    <li>Advanced task analytics</li>
+                    <li>Export to Google Calendar</li>
+                    <li>Priority support</li>
+                </ul>
+                <button class="premium-btn">💳 Upgrade Now (Coming Soon)</button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>Built with ❤️ in VS Code • 100% Free to Start</p>
+            <p class="api-status">AI API Status: <span id="apiStatus">Loading...</span></p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
