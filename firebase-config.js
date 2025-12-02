@@ -1,3 +1,4 @@
+const stripe = Stripe('pk_test_YOUR_KEY_HERE');  // ← Use publishable key
 // Firebase Configuration
 const firebaseConfig = {
     apiKey: "YOUR_API_KEY",
